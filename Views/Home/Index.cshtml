@@ -1,0 +1,146 @@
+@model List<MyNewsPage.Models.NewsItem>
+@{
+    ViewData["Title"] = "חדשות עדכניות";
+}
+
+<div class="hero-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1 class="display-4 fw-bold text-primary">
+                    <i class="fas fa-globe-middle-east me-3"></i>
+                    חדשות עדכניות מישראל
+                </h1>
+                <p class="lead text-muted">החדשות החמות ביותר מ-ynet.co.il</p>
+                <div class="refresh-info">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    <span>עודכן לאחרונה: @DateTime.Now.ToString("HH:mm dd/MM/yyyy")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var news in Model.Take(1))
+            {
+                <div class="col-12 mb-4">
+                    <div class="card featured-news shadow-lg">
+                        @if (!string.IsNullOrEmpty(news.ImageUrl))
+                        {
+                            <img src="@news.ImageUrl" class="card-img-top featured-image" alt="תמונה" onerror="this.style.display='none'">
+                        }
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-danger fs-6">חדשות בולטות</span>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    @news.PublishedDate.ToString("HH:mm")
+                                </small>
+                            </div>
+                            <h2 class="card-title fw-bold mb-3">@news.Title</h2>
+                            <p class="card-text text-muted">@news.Summary</p>
+                            <a href="@news.Url" target="_blank" class="btn btn-primary btn-lg">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                קרא עוד
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="row">
+            @foreach (var news in Model.Skip(1))
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card news-card h-100 shadow-sm hover-shadow">
+                        @if (!string.IsNullOrEmpty(news.ImageUrl))
+                        {
+                            <img src="@news.ImageUrl" class="card-img-top news-image" alt="תמונה" onerror="this.style.display='none'">
+                        }
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-info">חדשות</span>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    @news.PublishedDate.ToString("HH:mm")
+                                </small>
+                            </div>
+                            <h5 class="card-title fw-semibold flex-grow-1">@news.Title</h5>
+                            @if (!string.IsNullOrEmpty(news.Summary) && news.Summary != news.Title)
+                            {
+                                <p class="card-text text-muted small">@news.Summary</p>
+                            }
+                            <a href="@news.Url" target="_blank" class="btn btn-outline-primary mt-auto">
+                                <i class="fas fa-arrow-left me-1"></i>
+                                קרא עוד
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="alert alert-info shadow-sm">
+                    <i class="fas fa-info-circle fa-2x mb-3"></i>
+                    <h4>אין חדשות להצגה כרגע</h4>
+                    <p>אנא נסה שוב בעוד כמה רגעים או בדוק את החיבור שלך לאינטרנט</p>
+                    <a href="/" class="btn btn-primary">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        רענן עמוד
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle me-2"></i>
+                        אודות האתר
+                    </h5>
+                    <p class="card-text">
+                        אתר זה מציג חדשות עדכניות מאתר ynet.co.il<br>
+                        האתר נבנה עם ASP.NET Core ו-C#
+                    </p>
+                    <a href="https://github.com/dudiglass/MyNewsPage" target="_blank" class="btn btn-outline-dark">
+                        <i class="fab fa-github me-2"></i>
+                        קוד מקור ב-GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto refresh every 5 minutes
+        setTimeout(function() {
+            location.reload();
+        }, 300000);
+        
+        // Smooth scroll for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+}
